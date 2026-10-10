@@ -1,0 +1,6 @@
+/* The splash hero sits too far below the header by default (up to 10rem). */
+@media (min-width: 50rem) {
+  .hero {
+    padding-block: clamp(1rem, calc(0.25rem + 2.5vmin), 2rem);
+  }
+}

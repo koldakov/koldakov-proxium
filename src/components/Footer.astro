@@ -1,0 +1,92 @@
+---
+// Starlight's footer plus project links and the author.
+import Default from '@astrojs/starlight/components/Footer.astro'
+
+const links = [
+  { label: 'GitHub', href: 'https://github.com/koldakov/proxium' },
+  { label: 'Docker Hub', href: 'https://hub.docker.com/r/ikoldakov/proxium' },
+  { label: 'Issues', href: 'https://github.com/koldakov/proxium/issues' },
+  { label: 'Changelog', href: '/project/changelog/' },
+  { label: 'Roadmap', href: '/project/roadmap/' },
+]
+const year = new Date().getFullYear()
+---
+
+<Default />
+
+<div class="site-footer">
+  <nav aria-label="Project links">
+    {links.map(({ label, href }) =>
+      href.startsWith('/') ? (
+        <a href={href}>{label}</a>
+      ) : (
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          {label}
+        </a>
+      ),
+    )}
+  </nav>
+  <p class="credits">
+    <span>
+      © {year}{' '}
+      <a href="https://www.linkedin.com/in/aiv" target="_blank" rel="noopener noreferrer">
+        Ivan Koldakov
+      </a>
+    </span>
+    <span>
+      More projects at{' '}
+      <a href="https://koldakov.com" target="_blank" rel="noopener noreferrer">
+        koldakov.com
+      </a>
+    </span>
+    <span>
+      Open source under the{' '}
+      <a
+        href="https://github.com/koldakov/proxium/blob/main/LICENSE.md"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        MIT License
+      </a>
+    </span>
+  </p>
+</div>
+
+<style>
+  .site-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--sl-color-hairline);
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-3);
+    text-align: center;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.5rem;
+  }
+  a {
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--sl-color-white);
+  }
+  .credits {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 0.5rem;
+    margin: 0;
+  }
+  .credits > span + span::before {
+    content: '·';
+    margin-inline-end: 0.5rem;
+  }
+</style>

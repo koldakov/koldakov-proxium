@@ -17,7 +17,11 @@ export default defineConfig({
       logo: { src: './src/assets/logo.svg' },
       favicon: '/favicon.svg',
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/koldakov/proxium' }],
-      components: { SocialIcons: './src/components/SocialIcons.astro' },
+      components: {
+        Footer: './src/components/Footer.astro',
+        SocialIcons: './src/components/SocialIcons.astro',
+      },
+      customCss: ['./src/styles/custom.css'],
       lastUpdated: true,
       plugins: [starlightLlmsTxt()],
       sidebar: [
