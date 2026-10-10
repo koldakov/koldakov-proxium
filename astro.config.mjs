@@ -1,10 +1,14 @@
 import starlight from '@astrojs/starlight'
 import { defineConfig } from 'astro/config'
+import rehypeExternalLinks from 'rehype-external-links'
 import starlightLlmsTxt from 'starlight-llms-txt'
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://proxium.koldakov.com',
+  markdown: {
+    rehypePlugins: [[rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer'] }]],
+  },
   integrations: [
     starlight({
       title: 'Proxium',
@@ -13,6 +17,7 @@ export default defineConfig({
       logo: { src: './src/assets/logo.svg' },
       favicon: '/favicon.svg',
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/koldakov/proxium' }],
+      components: { SocialIcons: './src/components/SocialIcons.astro' },
       lastUpdated: true,
       plugins: [starlightLlmsTxt()],
       sidebar: [
