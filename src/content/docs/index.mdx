@@ -1,0 +1,80 @@
+---
+title: Proxium
+description: Your own proxy service in one docker run. HTTP and SOCKS5 proxy with accounts, quotas, speed limits, outgoing IP pools and a web admin panel.
+template: splash
+hero:
+  tagline: Your own proxy service in one `docker run`. HTTP and SOCKS5 with accounts, quotas, speed limits, outgoing IP pools and a web admin panel. Self-hosted, open source, no config files.
+  actions:
+    - text: Get started
+      link: /start/quickstart/
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/koldakov/proxium
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components'
+import { Image } from 'astro:assets'
+import policyRules from '../../assets/policy-rules.png'
+
+```bash
+docker run -d --name proxium -p 80:80 -p 8080:8080 -v proxium:/var/lib/proxium \
+  -e SUPERUSER_CREATE=true -e SUPERUSER_EMAIL=admin@example.com -e SUPERUSER_PASSWORD=change-me \
+  ikoldakov/proxium
+```
+
+<Image src={policyRules} alt="Policy rule: 1 Mbit/s in working hours, except work sites" />
+
+A policy rule: 1 Mbit/s in working hours, except GitHub and Atlassian. Applies in seconds, no restart.
+
+## Built for
+
+<CardGrid>
+  <Card title="AI agents" icon="rocket">
+    Give each agent its own token, cap its connections, speed and traffic, see what it used per day.
+    An agent browsing the web can't reach your internal network or cloud metadata, even if a prompt
+    injection tells it to.
+  </Card>
+  <Card title="Company gateways" icon="laptop">
+    The office network connects without passwords, everyone else with an account. Throttle
+    everything but work sites in working hours. Internal networks and cloud metadata stay
+    unreachable.
+  </Card>
+  <Card title="Selling proxies" icon="star">
+    Accounts with expiry, monthly traffic quotas counted from the day the client paid, speed tiers,
+    dedicated IPs, traffic per day. Revoke a client in one click.
+  </Card>
+  <Card title="Scraping and automation" icon="random">
+    Listen on many IPs and port ranges at once, go out from a random IP of a pool on every
+    connection, cap connections per target host.
+  </Card>
+  <Card title="A personal proxy" icon="approve-check">
+    A TLS-encrypted proxy on your VPS with an HTTPS admin panel, set up in minutes.
+  </Card>
+</CardGrid>
+
+## Read next
+
+<CardGrid>
+  <LinkCard
+    title="Quickstart"
+    description="Run it, add an account, send the first request."
+    href="/start/quickstart/"
+  />
+  <LinkCard
+    title="Introduction"
+    description="Why Proxium, what it does and how it works."
+    href="/start/introduction/"
+  />
+  <LinkCard
+    title="Policies"
+    description="Connection, speed and traffic limits with conditions."
+    href="/proxy/policies/"
+  />
+  <LinkCard
+    title="Outgoing IPs"
+    description="Pick the IP sites see, per account and network."
+    href="/proxy/outgoing-ips/"
+  />
+</CardGrid>
