@@ -46,4 +46,5 @@ curl -x http://USERNAME:PASSWORD@127.0.0.1:8080 https://ifconfig.me
 ```
 
 `Ctrl+C` (SIGINT) or SIGTERM stops accepting and waits up to `PROXY_GRACEFUL_TIMEOUT` for open connections.
-A second signal stops immediately.
+A second signal stops immediately. To restart without dropping clients, see
+[Restart without downtime](/proxy/restart/).

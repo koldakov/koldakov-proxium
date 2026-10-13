@@ -2,6 +2,10 @@ import starlight from '@astrojs/starlight'
 import { defineConfig } from 'astro/config'
 import rehypeExternalLinks from 'rehype-external-links'
 import starlightLlmsTxt from 'starlight-llms-txt'
+import starlightVersions from 'starlight-versions'
+
+// Pages of older versions, see Versions in README.md.
+const snapshots = ['[0-9]*', '[0-9]*/**']
 
 // https://astro.build/config
 export default defineConfig({
@@ -23,7 +27,15 @@ export default defineConfig({
       },
       customCss: ['./src/styles/custom.css'],
       lastUpdated: true,
-      plugins: [starlightLlmsTxt()],
+      plugins: [
+        starlightVersions({
+          current: { label: '0.1.1' },
+          versions: [{ slug: '0.1.0' }],
+          exclude: ['project/**'],
+        }),
+        // Out of llms-small.txt, at the end of llms-full.txt.
+        starlightLlmsTxt({ exclude: snapshots, demote: snapshots }),
+      ],
       sidebar: [
         { label: 'Start here', items: [{ autogenerate: { directory: 'start' } }] },
         { label: 'Installation', items: [{ autogenerate: { directory: 'installation' } }] },

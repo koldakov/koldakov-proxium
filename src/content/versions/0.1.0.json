@@ -1,0 +1,65 @@
+{
+  "sidebar": [
+    {
+      "label": "Start here",
+      "items": [
+        {
+          "autogenerate": {
+            "directory": "start"
+          }
+        }
+      ]
+    },
+    {
+      "label": "Installation",
+      "items": [
+        {
+          "autogenerate": {
+            "directory": "installation"
+          }
+        }
+      ]
+    },
+    {
+      "label": "Proxy",
+      "items": [
+        {
+          "autogenerate": {
+            "directory": "proxy"
+          }
+        }
+      ]
+    },
+    {
+      "label": "Admin UI",
+      "items": [
+        {
+          "autogenerate": {
+            "directory": "admin"
+          }
+        }
+      ]
+    },
+    {
+      "label": "Reference",
+      "items": [
+        {
+          "autogenerate": {
+            "directory": "reference"
+          }
+        }
+      ]
+    },
+    {
+      "label": "Project",
+      "items": [
+        {
+          "autogenerate": {
+            "directory": "project"
+          }
+        }
+      ]
+    }
+  ],
+  "excluded": ["project/changelog", "project/roadmap"]
+}

@@ -32,12 +32,13 @@ Read by the proxy, the API and the management commands.
 
 ## Proxy
 
-| Variable                       | Description                                                                                |
-| ------------------------------ | ------------------------------------------------------------------------------------------ |
-| `PROXY_LISTEN`                 | Addresses to listen on, default `127.0.0.1:8080`, see below                                |
-| `PROXY_GRACEFUL_TIMEOUT`       | Seconds open connections get to finish on shutdown, default `30`                           |
-| `PROXY_LOG_LEVEL`              | `DEBUG`, `INFO`, `WARNING`, `ERROR` or `CRITICAL`, default `INFO`                          |
-| `PROXY_SETTINGS_POLL_INTERVAL` | Seconds between lookups of the [settings](/proxy/settings/) from the admin UI, default `5` |
+| Variable                       | Description                                                                                                 |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `PROXY_LISTEN`                 | Addresses to listen on, default `127.0.0.1:8080`, see below                                                 |
+| `PROXY_GRACEFUL_TIMEOUT`       | Seconds open connections get to finish on shutdown, default `30`                                            |
+| `PROXY_REUSE_PORT`             | Let another proxy listen on the same ports, default `true`, see [Restart without downtime](/proxy/restart/) |
+| `PROXY_LOG_LEVEL`              | `DEBUG`, `INFO`, `WARNING`, `ERROR` or `CRITICAL`, default `INFO`                                           |
+| `PROXY_SETTINGS_POLL_INTERVAL` | Seconds between lookups of the [settings](/proxy/settings/) from the admin UI, default `5`                  |
 
 `PROXY_LISTEN` is a comma-separated list of `host:port` pairs. A host is an IP address, a network or a host name,
 IPv6 goes in brackets. A port may be an inclusive range. Every host listens on every port of its pair:
