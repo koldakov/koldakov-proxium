@@ -1,11 +1,12 @@
 ---
 title: Separate containers
-description: Run PostgreSQL, the API with the admin UI, and the proxy as three containers with Docker Compose.
+description: Run the API with the admin UI and the proxy as two containers next to PostgreSQL and Redis with Docker Compose.
 sidebar:
   order: 3
 ---
 
-`docker/compose.yaml` runs the same image as three containers: PostgreSQL, the API with the admin UI, and the proxy.
+`docker/compose.yaml` runs the same image as two containers, the API with the admin UI and the proxy, next to
+PostgreSQL and Redis.
 They share the secrets, settings come from the environment as with `docker run`:
 
 ```bash
@@ -21,6 +22,6 @@ To move to your own keys later, pass the generated ones from the volume, or rota
 `ENCRYPTION_OLD_KEYS`, see [TLS](/proxy/tls/#encryption-key): with a new key stored certificates can't be read. A
 new `API_SECRET_KEY` only logs everyone out.
 
-To customize ports, the database, TLS and the rest, take
+To customize ports, the database, Redis, TLS and the rest, take
 [docker/compose.yaml](https://github.com/koldakov/proxium/blob/main/docker/compose.yaml) as a starting point and
 edit your copy.

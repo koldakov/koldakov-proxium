@@ -1,11 +1,12 @@
 ---
 title: From source
-description: Run Proxium with uv and your own PostgreSQL.
+description: Run Proxium with uv and your own PostgreSQL and Redis.
 sidebar:
   order: 4
 ---
 
-Requirements: Python 3.14+, [uv](https://docs.astral.sh/uv/), PostgreSQL.
+Requirements: Python 3.14+, [uv](https://docs.astral.sh/uv/), PostgreSQL and Redis of the
+[supported versions](/installation/supported-versions/).
 
 ```bash
 git clone https://github.com/koldakov/proxium.git

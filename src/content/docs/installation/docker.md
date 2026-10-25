@@ -1,14 +1,24 @@
 ---
 title: Docker
-description: Run the proxy, the API, the admin UI and PostgreSQL from one image.
+description: Run the proxy, the API, the admin UI, PostgreSQL and Redis from one image.
 sidebar:
   order: 1
 ---
 
-One image runs everything: the proxy, the API, the admin UI and PostgreSQL. State lives in one volume.
+One image runs everything: the proxy, the API, the admin UI, PostgreSQL and Redis. State lives in one volume.
 
 The image is `ikoldakov/proxium` on Docker Hub and `ghcr.io/koldakov/proxium` on GitHub, for amd64 and arm64.
-`latest` is the last release, a version like `0.1.0` pins it, `edge` is the current `main`, not released yet.
+`latest` is the last release, a version like `0.2.0` pins it, `edge` is the current `main`, not released yet.
+
+:::caution[`edge` isn't for production]
+`edge` is for trying what's coming. It's built from every commit to `main`, and a commit may change what an
+installation needs before the release that documents how to upgrade. E.g. when Redis became required, an `edge`
+installation with its own database and no `REDIS_URL` started each container with a Redis of its own, which they
+don't share, and a source install without `REDIS_URL` stopped starting. Run a version tag in production. Before
+pulling a new `edge`, read `[Unreleased]` in the
+[changelog](https://github.com/koldakov/proxium/blob/main/CHANGELOG.md). Moving between versions: see
+[Upgrading](/installation/upgrading/).
+:::
 
 ## Quickstart
 
@@ -62,15 +72,19 @@ Docker Desktop on macOS and Windows runs containers in a VM, they don't see the 
 `--network host`. Run Proxium without Docker there, see [From source](/installation/from-source/).
 :::
 
-## Own database and secrets
+## Own database, Redis and secrets
 
 | Want           | Add                                                                                       |
 | -------------- | ----------------------------------------------------------------------------------------- |
 | Own PostgreSQL | `-e DATABASE_URL=postgres://user:password@db.example.com:5432/proxium`                    |
+| Own Redis      | `-e REDIS_URL=redis://redis.example.com:6379/0 -e REDIS_PASSWORD=...`                     |
 | Own keys       | `-e ENCRYPTION_KEY=... -e API_SECRET_KEY=...`, else generated once and kept in the volume |
 
 Every variable from [Configuration](/reference/configuration/) works with `-e`, Docker-only ones are under
-[Docker](/reference/configuration/#docker). Give `docker stop` time for open connections: `--stop-timeout 40`.
+[Docker](/reference/configuration/#docker). Both must be of the [supported versions](/installation/supported-versions/).
+
+Give `docker stop` time for open connections: `--stop-timeout 40`. Leave a few seconds over
+`PROXY_GRACEFUL_TIMEOUT`: closing connections release their places in Redis, up to the two Redis timeouts.
 
 ## Commands
 

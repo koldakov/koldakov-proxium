@@ -51,7 +51,7 @@ an edit and a reload, every admin needs shell access. Proxium keeps all of it in
 - Web admin UI
 - Users, groups and per-action permissions, no privilege escalation
 - TLS certificates: upload, generate self-signed, import from certbot, encryption key rotation
-- Traffic per account and network
+- Traffic per account and network: a chart by day or a table
 
 ## How it works
 
@@ -75,13 +75,14 @@ an edit and a reload, every admin needs shell access. Proxium keeps all of it in
                  └──────────────────────────────┘
 ```
 
-|                | What it does                                                                                | Runs as                              |
-| -------------- | ------------------------------------------------------------------------------------------- | ------------------------------------ |
-| **Proxy**      | Accepts clients, authenticates, applies policies, forwards traffic, counts it               | `proxium`                            |
-| **Cache**      | Keeps account, network and TLS certificate lookups for a TTL, connections skip the database | pluggable, in the proxy's memory now |
-| **API**        | Reads and writes the database for the admin UI                                              | `proxium-api`                        |
-| **Admin UI**   | Web interface for admins, talks only to the API                                             | static files behind Caddy            |
-| **PostgreSQL** | Single source of truth: accounts, policies, certificates, traffic                           | bundled or your own                  |
+|                | What it does                                                                                                               | Runs as                              |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| **Proxy**      | Accepts clients, authenticates, applies policies, forwards traffic, counts it                                              | `proxium`                            |
+| **Cache**      | Keeps account, network and TLS certificate lookups for a TTL, connections skip the database                                | pluggable, in the proxy's memory now |
+| **API**        | Reads and writes the database for the admin UI                                                                             | `proxium-api`                        |
+| **Admin UI**   | Web interface for admins, talks only to the API                                                                            | static files behind Caddy            |
+| **PostgreSQL** | Single source of truth: accounts, policies, certificates, traffic                                                          | bundled or your own                  |
+| **Redis**      | Shared state of the instances: connection and speed limits, traffic not yet in the database for quotas, the migration lock | bundled or your own                  |
 
 Connections don't query the database each time: authentication and the TLS certificate come from the cache,
 settings and policies from memory refreshed every few seconds, traffic is written in batches about once a minute.

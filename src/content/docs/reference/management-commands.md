@@ -53,6 +53,9 @@ uv run --env-file .env proxium-manage migrate
 uv run --env-file .env proxium-manage migrate --wait 60   # wait up to 60s for the database to start
 ```
 
+It holds a lock in [Redis](/reference/redis/) meanwhile: of several instances starting at once one migrates, the
+others wait for it, then find nothing to migrate. A lock left by a crashed instance expires within 10 minutes.
+
 ## importcert
 
 Add a TLS certificate from PEM files and activate it, see [TLS](/proxy/tls/). It asks before turning the active

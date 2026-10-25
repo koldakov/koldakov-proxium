@@ -15,9 +15,15 @@ rest.
 
 ## Limits
 
-Each limit is counted over a scope: one connection, an account or network with all its connections, a client IP,
-a target host or the whole proxy. E.g. 10 connections per account, or 100 Mbit/s for the whole proxy that all
-clients share.
+Each connection and speed limit is counted over a scope: the connections it groups share one limit.
+
+| Scope                  | Connections that share the limit                         | E.g.                             |
+| ---------------------- | -------------------------------------------------------- | -------------------------------- |
+| Per account or network | All of one account or trusted network, from any IP       | 10 connections per client        |
+| Per client IP          | All from one IP address, whatever account they use       | 20 Mbit/s per office             |
+| Per target host        | All to one site, as the client named it, from any client | 50 connections to `example.com`  |
+| Per connection         | Each connection on its own                               | 5 Mbit/s per download            |
+| Whole proxy            | Every connection of every client                         | 1 Gbit/s for the server's uplink |
 
 - **Connections.** Past a connection limit new connections are refused, HTTP clients get
   `429 Too Many Connections`.
@@ -34,8 +40,8 @@ Periods follow one another from a UTC day: for a global policy it's set on the p
 account or network page, next to the policy, e.g. the day the client paid. Assigning sets it to that day. Monthly
 periods from the 31st start on the last day of shorter months.
 
-Usage is the traffic in the database plus what the proxy hasn't written yet: traffic of other proxy processes
-counts within a minute.
+Usage is the traffic in the database plus what the proxy instances haven't written yet, shared through Redis:
+traffic of other instances counts within about two seconds.
 
 ## Rules and conditions
 
@@ -72,9 +78,24 @@ IP, which no domain matches.
 
 ## When changes apply
 
-The proxy looks policies up every `PROXY_SETTINGS_POLL_INTERVAL` seconds. A change reaches new connections, open
-ones keep the limits they started with, though a connection limit changed in place keeps counting them.
-Assigning a policy reaches a client within the cache TTL of passed checks.
+The proxy looks policies up every `PROXY_SETTINGS_POLL_INTERVAL` seconds. Every change reaches new connections.
+Open ones get some of them:
 
-Limits are counted in the proxy's memory: with several proxy processes each counts its own. An account or network
-takes up to `API_POLICIES_MAX_PER_OWNER` policies.
+| Change                                                                                                                    | Open connections                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Speed limit's speed, burst or direction edited                                                                            | Get them at once, data already waiting within one burst                               |
+| Speed limit's scope changed                                                                                               | Keep the old limit until they close                                                   |
+| Speed limit removed, with its rule, or its policy turned off                                                              | Aren't slowed down by it anymore. Turned on again, it slows them again                |
+| Connection limit edited                                                                                                   | Stay open and keep counting: new ones are refused until fewer than the limit are open |
+| Traffic quota used up                                                                                                     | Are cut within a second                                                               |
+| Anything else: rules and conditions, quotas edited, limits added, connection limits and quotas removed, policies assigned | Keep what they started with until they close                                          |
+
+Assigning a policy reaches a client within the cache TTL of passed checks. An account or network takes up to
+`API_POLICIES_MAX_PER_OWNER` policies.
+
+## Several instances
+
+Connection limits, speed limits and quotas are counted in Redis: all proxy instances share them, a limit of 10
+connections is 10 across all of them. See what happens if Redis is down for
+[connection limits](/reference/redis/#connection-limits), [speed limits](/reference/redis/#speed-limits) and
+[traffic quotas](/reference/redis/#traffic-quotas).

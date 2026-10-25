@@ -29,8 +29,8 @@ export default defineConfig({
       lastUpdated: true,
       plugins: [
         starlightVersions({
-          current: { label: '0.1.1' },
-          versions: [{ slug: '0.1.0' }],
+          current: { label: '0.2.0' },
+          versions: [{ slug: '0.1.1' }, { slug: '0.1.0' }],
           exclude: ['project/**'],
         }),
         // Out of llms-small.txt, at the end of llms-full.txt.

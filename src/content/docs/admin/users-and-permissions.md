@@ -11,7 +11,7 @@ permissions per section and action, e.g. view, add and change trusted networks, 
 certificates, through groups and on their own: a user has the permissions of all their groups plus their own.
 Traffic is a permission of its own, so a user can see accounts and networks without their traffic.
 
-| An account: outgoing IP, policies, daily traffic        | A read-only group: permissions per section and action       |
+| An account: outgoing IP, policies, traffic by day       | A read-only group: permissions per section and action       |
 | ------------------------------------------------------- | ----------------------------------------------------------- |
 | ![Proxy account page](../../../assets/account-page.png) | ![Group permissions](../../../assets/group-permissions.png) |
 
