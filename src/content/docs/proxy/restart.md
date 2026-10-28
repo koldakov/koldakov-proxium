@@ -40,5 +40,5 @@ database and Redis, each Redis step up to the two Redis timeouts.
 If a release changes how quotas keep traffic in Redis, or the old proxy is from before quotas were shared, the
 release notes say so: meanwhile the old and the new proxy don't see each other's traffic not yet in the database, a
 quota may let through what the old one hasn't written, for up to `PROXY_GRACEFUL_TIMEOUT`. From 0.1.1 to 0.2 see
-[Upgrading](/installation/upgrading/#without-downtime).
+[Upgrading](/installation/upgrading/#without-downtime-1).
 :::

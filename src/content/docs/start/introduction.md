@@ -49,6 +49,7 @@ an edit and a reload, every admin needs shell access. Proxium keeps all of it in
 **Administration**
 
 - Web admin UI
+- Every proxy instance at a glance: status, version, outgoing IPs it lacks
 - Users, groups and per-action permissions, no privilege escalation
 - TLS certificates: upload, generate self-signed, import from certbot, encryption key rotation
 - Traffic per account and network: a chart by day or a table

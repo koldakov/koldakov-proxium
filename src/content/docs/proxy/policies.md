@@ -11,7 +11,8 @@ other to the accounts and trusted networks it's assigned to, on their pages.
 
 A client gets the limits of all its policies at once: a policy only adds limits, the strictest one wins. To give
 some clients more than a global policy allows, raise its limit and set the lower one in a policy assigned to the
-rest.
+rest. Every global policy is checked on every connection, so there are up to `API_GLOBAL_POLICIES_MAX` of them,
+turned off ones too: many rules for everyone fit in the rules of one global policy.
 
 ## Limits
 

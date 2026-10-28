@@ -16,7 +16,6 @@ Where Proxium is heading. No dates, priorities may change. Ideas and use cases a
 - Speed limits take bigger batches for busy clients: fewer calls to Redis with many clients downloading at once
 - Speed limits split the rate between the instances while Redis is down, instead of each giving all of it
 - Several worker processes per proxy, to use every CPU core
-- The admin UI warns about outgoing IPs that no proxy instance has
 
 **Access control**
 
@@ -46,7 +45,6 @@ Where Proxium is heading. No dates, priorities may change. Ideas and use cases a
 **Operations**
 
 - Metrics
-- Documentation site
 - Upgrades of the bundled PostgreSQL to a new major version
 
 ## Exploring

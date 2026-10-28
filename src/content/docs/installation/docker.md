@@ -8,7 +8,7 @@ sidebar:
 One image runs everything: the proxy, the API, the admin UI, PostgreSQL and Redis. State lives in one volume.
 
 The image is `ikoldakov/proxium` on Docker Hub and `ghcr.io/koldakov/proxium` on GitHub, for amd64 and arm64.
-`latest` is the last release, a version like `0.2.0` pins it, `edge` is the current `main`, not released yet.
+`latest` is the last release, a version like `0.3.0` pins it, `edge` is the current `main`, not released yet.
 
 :::caution[`edge` isn't for production]
 `edge` is for trying what's coming. It's built from every commit to `main`, and a commit may change what an

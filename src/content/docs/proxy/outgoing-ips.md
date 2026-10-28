@@ -26,9 +26,18 @@ family. A pool holds up to `API_OUTGOING_POOL_MAX_SIZE` IPs.
 ## Server requirements
 
 The proxy binds the outgoing socket to the IP before connecting, so the IP must be on the server's interfaces,
-e.g. `ip addr add 203.0.113.11/32 dev eth0`, and routed to it. Nothing checks that on saving, the API may run on
-another host: a connection from an IP that isn't there fails with "not on this host or loopback" in the log, and
-so does one from loopback, e.g. `listener` on `127.0.0.1`. Nothing falls back to another IP.
+e.g. `ip addr add 203.0.113.11/32 dev eth0`, and routed to it. A connection from an IP that isn't there fails with
+"not on this host or loopback" in the log, and so does one from loopback, e.g. `listener` on `127.0.0.1`. Nothing
+falls back to another IP.
 
 Behind cloud NAT, use the private IPs the public ones map to. IPs of different providers need policy routing
 (`ip rule`) in the OS. In Docker, outgoing IPs need `--network host`, see [Ports and IPs](/installation/docker/#ports-and-ips).
+
+## IPs a proxy doesn't have
+
+Each proxy reports the IPs of its interfaces with its [heartbeat](/admin/instances/), so the admin UI flags an
+outgoing IP that a running or pending proxy doesn't have: "Not on 1 of 3 proxies" in the list of outgoing IPs, in
+pools and on the IP's page, and the Overview lists such IPs. Saving one isn't refused: the IP may be added to the
+servers later, a new IP shows up within one heartbeat. In Docker bridge networking a proxy sees only the
+container's IPs, so every host IP is flagged, rightly: it takes `--network host`. With `net.ipv4.ip_nonlocal_bind`
+the proxy can bind IPs it doesn't have, the flag may then be wrong.

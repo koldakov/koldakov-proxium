@@ -46,6 +46,7 @@ Read by the proxy, the API and the management commands.
 | `PROXY_BACKLOG`                | Connections waiting to be accepted per listening socket, default `1024`. Raise it if bursts of new connections stall. Takes effect on restart, see below                                                                                                                                                                                        |
 | `PROXY_LOG_LEVEL`              | `DEBUG`, `INFO`, `WARNING`, `ERROR` or `CRITICAL`, default `INFO`                                                                                                                                                                                                                                                                               |
 | `PROXY_SETTINGS_POLL_INTERVAL` | Seconds between lookups of the [settings](/proxy/settings/) from the admin UI, default `5`                                                                                                                                                                                                                                                      |
+| `PROXY_HEARTBEAT_INTERVAL`     | Seconds between reports of each instance to the database, default `30`. An instance that misses three in a row shows as unknown, see [Proxy instances](/admin/instances/)                                                                                                                                                                       |
 | `PROXY_CONNECTION_LEASE`       | Seconds a crashed instance's connections keep counting toward connection limits, and its unwritten traffic toward quotas, default `30`, at least `3 + REDIS_SOCKET_CONNECT_TIMEOUT + REDIS_SOCKET_TIMEOUT`, `7` by default, see [Connection limits](/reference/redis/#connection-limits) and [Traffic quotas](/reference/redis/#traffic-quotas) |
 | `PROXY_REDIS_OUTAGE_TIMEOUT`   | Seconds connection limits and quotas are counted in each instance alone while Redis is down, default `30`. At least the two Redis timeouts together, see [Connection limits](/reference/redis/#connection-limits) and [Traffic quotas](/reference/redis/#traffic-quotas)                                                                        |
 | `PROXY_SPEED_BATCH`            | Seconds of a speed limit's rate an instance takes from Redis at once, default `0.1`. Each instance may go over a limit by one batch, see [Speed limits](/reference/redis/#speed-limits)                                                                                                                                                         |
@@ -74,12 +75,13 @@ With `--network host` the container shares the host's network: set it on the hos
 
 ## API
 
-| Variable                     | Description                                                                                          |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `API_SECRET_KEY`             | Secret that signs API user tokens, at least 32 characters. Changing it logs everyone out             |
-| `API_CORS_ORIGINS`           | Comma-separated browser origins allowed to call the API, e.g. the admin dev server. Empty blocks all |
-| `API_OUTGOING_POOL_MAX_SIZE` | IPs in one outgoing IP pool at most, default `256`                                                   |
-| `API_POLICIES_MAX_PER_OWNER` | Policies assigned to one account or trusted network at most, up to `100`, default `32`               |
+| Variable                     | Description                                                                                                         |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `API_SECRET_KEY`             | Secret that signs API user tokens, at least 32 characters. Changing it logs everyone out                            |
+| `API_CORS_ORIGINS`           | Comma-separated browser origins allowed to call the API, e.g. the admin dev server. Empty blocks all                |
+| `API_OUTGOING_POOL_MAX_SIZE` | IPs in one outgoing IP pool at most, default `256`                                                                  |
+| `API_POLICIES_MAX_PER_OWNER` | Policies assigned to one account or trusted network at most, up to `100`, default `32`                              |
+| `API_GLOBAL_POLICIES_MAX`    | Global policies at most, turned off ones too, up to `100`, default `32`. Lowering it keeps the ones past it working |
 
 ## Management commands
 

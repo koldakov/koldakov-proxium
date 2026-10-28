@@ -1,0 +1,97 @@
+---
+title: Docker
+description: Run the proxy, the API, the admin UI, PostgreSQL and Redis from one image.
+sidebar:
+  order: 1
+slug: 0.2.0/installation/docker
+---
+
+One image runs everything: the proxy, the API, the admin UI, PostgreSQL and Redis. State lives in one volume.
+
+The image is `ikoldakov/proxium` on Docker Hub and `ghcr.io/koldakov/proxium` on GitHub, for amd64 and arm64.
+`latest` is the last release, a version like `0.2.0` pins it, `edge` is the current `main`, not released yet.
+
+:::caution[`edge` isn't for production]
+`edge` is for trying what's coming. It's built from every commit to `main`, and a commit may change what an
+installation needs before the release that documents how to upgrade. E.g. when Redis became required, an `edge`
+installation with its own database and no `REDIS_URL` started each container with a Redis of its own, which they
+don't share, and a source install without `REDIS_URL` stopped starting. Run a version tag in production. Before
+pulling a new `edge`, read `[Unreleased]` in the
+[changelog](https://github.com/koldakov/proxium/blob/v0.2.0/CHANGELOG.md). Moving between versions: see
+[Upgrading](/0.2.0/installation/upgrading/).
+:::
+
+## Quickstart
+
+```bash
+docker run -d --name proxium -p 80:80 -p 8080:8080 -v proxium:/var/lib/proxium \
+  -e SUPERUSER_CREATE=true -e SUPERUSER_EMAIL=admin@example.com -e SUPERUSER_PASSWORD=... \
+  ikoldakov/proxium:0.2.0
+```
+
+`SUPERUSER_CREATE=true` creates the first admin on start, the email and the password are required then. Later
+starts skip it: changing `SUPERUSER_PASSWORD` doesn't change the stored password.
+
+Without it no admin is created, create one later in the running container:
+
+```bash
+docker exec -it proxium proxium-manage createsuperuser
+```
+
+The admin UI is at http://localhost, the proxy at `localhost:8080`. Superuser variables: `SUPERUSER_CREATE`,
+`SUPERUSER_EMAIL`, `SUPERUSER_PASSWORD`, `SUPERUSER_NAME`, `SUPERUSER_SURNAME`, see
+[Configuration](/0.2.0/reference/configuration/) for these and the rest.
+
+To serve the admin UI on a domain over HTTPS, see [HTTPS for the admin UI](/0.2.0/installation/admin-https/).
+
+## Ports and IPs
+
+`PROXY_LISTEN` is what the proxy listens on inside the container, `-p` publishes it. Container ports must match.
+`EXPOSE` in the image lists only the defaults, any port works with `-p`:
+
+```bash
+docker run -d --name proxium -p 80:80 -p 8090-8092:8090-8092 -e PROXY_LISTEN=0.0.0.0:8090-8092 \
+  -v proxium:/var/lib/proxium ikoldakov/proxium:0.2.0
+```
+
+Several IPs require the host network: in a bridge network the container doesn't see the host's IPs. `-p` isn't used
+then, `PROXY_LISTEN` takes the host's addresses as is:
+
+```bash
+docker run -d --name proxium --network host -e PROXY_LISTEN=10.0.0.0/29:10000-10999 \
+  -v proxium:/var/lib/proxium ikoldakov/proxium:0.2.0
+```
+
+|                                            | `-p`                   | `--network host` |
+| ------------------------------------------ | ---------------------- | ---------------- |
+| Ports and port ranges                      | yes                    | yes              |
+| Several listening IPs                      | no, the proxy sees one | yes, Linux only  |
+| [Outgoing IPs](/0.2.0/proxy/outgoing-ips/) | no, one host IP        | yes, Linux only  |
+
+:::caution[Linux only]
+Docker Desktop on macOS and Windows runs containers in a VM, they don't see the computer's IPs even with
+`--network host`. Run Proxium without Docker there, see [From source](/0.2.0/installation/from-source/).
+:::
+
+## Own database, Redis and secrets
+
+| Want           | Add                                                                                       |
+| -------------- | ----------------------------------------------------------------------------------------- |
+| Own PostgreSQL | `-e DATABASE_URL=postgres://user:password@db.example.com:5432/proxium`                    |
+| Own Redis      | `-e REDIS_URL=redis://redis.example.com:6379/0 -e REDIS_PASSWORD=...`                     |
+| Own keys       | `-e ENCRYPTION_KEY=... -e API_SECRET_KEY=...`, else generated once and kept in the volume |
+
+Every variable from [Configuration](/0.2.0/reference/configuration/) works with `-e`, Docker-only ones are under
+[Docker](/0.2.0/reference/configuration/#docker). Both must be of the [supported versions](/0.2.0/installation/supported-versions/).
+
+Give `docker stop` time for open connections: `--stop-timeout 40`. Leave a few seconds over
+`PROXY_GRACEFUL_TIMEOUT`: closing connections release their places in Redis, up to the two Redis timeouts.
+
+## Commands
+
+[Management commands](/0.2.0/reference/management-commands/) run in the container with `proxium-manage`:
+
+```bash
+docker exec -it proxium proxium-manage createsuperuser
+docker exec -it proxium proxium-manage changepassword admin@example.com
+```

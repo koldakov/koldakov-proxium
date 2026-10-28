@@ -20,9 +20,9 @@ the order. Images go to `src/assets/`.
 Older releases stay in Docker, so every release has its own docs, versioned with
 [starlight-versions](https://starlight-versions.vercel.app) (`starlightVersions` in `astro.config.mjs`):
 
-- `src/content/docs/` (except the version folders) is the current release, now `0.2.0`, served at `/`.
+- `src/content/docs/` (except the version folders) is the current release, now `0.3.0`, served at `/`.
 - `src/content/docs/<version>/` is a frozen snapshot of an older release, served at `/<version>/`, with its images in
-  `src/assets/<version>/` and its sidebar in `src/content/versions/<version>.json`. Now `0.1.1` and `0.1.0`.
+  `src/assets/<version>/` and its sidebar in `src/content/versions/<version>.json`. Now `0.2.0`, `0.1.1` and `0.1.0`.
 - `project/` (changelog, roadmap) isn't versioned: one page for all releases.
 
 Snapshots aren't updated, fixes go to the current pages only.

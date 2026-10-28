@@ -12,6 +12,54 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-28
+
+Every proxy instance in sight: the new Overview shows which ones run and which outgoing IPs they lack. And a new
+look for the admin UI: easier on the eyes, clearer to read, errors right where they happen. See
+[Upgrading](/installation/upgrading/#from-02-to-03).
+
+### Added
+
+- The Overview, the new start page of the admin UI, shows the health of every proxy at a glance: how many are
+  running, pending, stopped or unknown, and which ones went silent. The Proxy instances page under it lists them all
+  with host, version, uptime and when each last reported. Proxies report themselves, nothing to set up, a crashed or
+  hung one turns unknown within a minute and a half. Removed servers are deregistered with one click.
+  `PROXY_HEARTBEAT_INTERVAL` sets how often proxies report, `30` seconds by default.
+- Outgoing IPs a proxy doesn't have are flagged before they cost you a connection: "Not on 1 of 3 proxies" in the
+  list, in pools and on the IP's page, and the Overview lists them. Proxies report the IPs of their interfaces with
+  their heartbeat, a newly added one shows up within it. Each proxy instance opens the list of its IPs.
+- The admin UI asks before leaving a form with unsaved changes, on reloading or closing the tab too.
+- Rules of a policy move up and down: the first matching rule applies, order is in your hands.
+- `API_GLOBAL_POLICIES_MAX`: at most this many global policies, `32` by default, turned off ones too. Each global
+  policy is checked on every connection, many rules for everyone fit in one. Global policies past it, e.g. after
+  lowering it, keep working and can be edited, only making one more global is refused. The admin UI says so at
+  the Global switch.
+
+### Changed
+
+- The admin UI has its own light and dark themes, the light one without glaring white. The Inter font comes with
+  it, so it looks the same without internet access.
+- The sidebar starts with the Overview, set apart from what you configure below it. Users who can't see the
+  Overview land on the first page open to them, as before.
+- Policy rules are cards with a summary of when each one applies and what it limits, e.g. "Mon–Fri 09:00–18:00 and
+  unless domain github.com: 1 Mbit/s each way per account". A card collapses to its summary, as on the read-only
+  page. Conditions start with "If" or "Unless", days are picked from a list with weekdays and weekends at the top.
+- Date and time inputs are one picker in every browser, Safari included, in the browser's 12 or 24 hour clock. A
+  half-typed date is an error instead of an empty value, e.g. an account that never expires.
+- Lists show statuses as chips: an account is Active, Expired or Revoked at a glance. Usernames, keys, networks and
+  IPs are monospace.
+- Errors show where they happen: a failed save above the form's buttons, a failed action inside its dialog, which
+  stays open. Toasts only confirm what's done, at the top of the page.
+- The login page has the admin's look. A wrong email or password is said under the inputs, an ended session in the
+  page, not in toasts that go away.
+- Groups and own permissions of a superuser are locked in the user form: a superuser has every permission. They
+  apply again once Superuser is turned off.
+
+### Fixed
+
+- The traffic of an account or network keeps its height when switching the period or between chart and table: the
+  page below doesn't jump.
+
 ## [0.2.0] - 2026-10-25
 
 Every limit is shared between proxy instances: run several on one database, and they work as one proxy. See
@@ -164,7 +212,8 @@ Your own proxy service in one `docker run`: accounts, policies, outgoing IPs and
 - Admin UI over HTTP or HTTPS with `ADMIN_TLS`: Let's Encrypt, own certificate files or an internal CA.
 - Optional superuser on first start with `SUPERUSER_CREATE`.
 
-[Unreleased]: https://github.com/koldakov/proxium/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/koldakov/proxium/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/koldakov/proxium/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/koldakov/proxium/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/koldakov/proxium/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/koldakov/proxium/releases/tag/v0.1.0
